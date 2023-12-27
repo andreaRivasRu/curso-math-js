@@ -19,6 +19,35 @@ function esPar(list) {
     return !(list.length % 2);
 }
 
+function calcModa(list) {
+    const listCount = {};
+
+    for (let i = 0; i < list.length; i++) {
+        const element = list[i];
+        
+        if (listCount[element]) {
+            listCount[element] += 1;
+        } else {
+            listCount[element] = 1;
+        }
+    }
+    const listArray = Object.entries(listCount);
+
+    const listBiOrdenada = ordenarListaBidimensional(listArray, 1);
+    const maxCount = listBiOrdenada[listBiOrdenada.length - 1][1];
+
+    const modas = listBiOrdenada.filter(item => item[1] === maxCount).map(item => item[0]);
+
+    return modas;
+}
+
+function ordenarListaBidimensional(unsortedList, i) {
+    const listBi = unsortedList.sort((a, b) => a[i] - b[i]);
+    return listBi;
+}
+
+console.log(calcModa([1,1,5,7,9,1,3,4,9]));
+
 function ordenarLista(unsortedList) {
     const list = unsortedList.sort((a, b) => a - b);
     return list;
@@ -55,9 +84,3 @@ function calcPromedio(list) {
 
 console.log(calcMediana([80, 10, 30, 20, 50, 70]));
 console.log(calcMediana([80, 10, 20, 50, 70]));
-
-// 10, 20, 30, 50, 70, 80 = 40
-// 80, 10, 30, 20, 50, 70 = 25
-
-// 10, 20, 50, 70, 80 = 50
-// 80, 10, 20, 50, 70 = 20
