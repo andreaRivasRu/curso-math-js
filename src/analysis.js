@@ -50,3 +50,38 @@ function salaryProjection(personName) {
     const newSalary = currentSalary * medianIncrementPorcent + currentSalary;
     return Math.round(newSalary);
 }
+
+// Analisis empresarial
+/* {
+    Industrias Mokepon: {
+        2018: [salario, salario, salario],
+        2019: [salario, salario, salario],
+        2020: [salario, salario, salario],
+    },
+    Freelance: {
+        2018: [salario, salario, salario],
+        2019: [salario, salario, salario],
+        2020: [salario, salario, salario],
+    },
+    MarketerosCOL: {
+        2018: [salario, salario, salario],
+        2019: [salario, salario, salario],
+        2020: [salario, salario, salario],
+    },
+} */
+const companies = {};
+for (person of salaries) {
+    for (job of person.jobs) {
+        if (!companies[job.company]) {
+            companies[job.company] = {};
+        }
+
+        if (!companies[job.company][job.year]) {
+            companies[job.company][job.year] = [];
+        }
+
+        companies[job.company][job.year].push(job.salary);
+    }
+}
+
+console.log(companies);

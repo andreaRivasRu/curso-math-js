@@ -8,8 +8,6 @@ salaries.push({
     { year: 2021, company: 'Industrias Mokepon', salary: 1050, },
     { year: 2022, company: 'Industrias Mokepon', salary: 1250, },
     { year: 2023, company: 'Industrias Mokepon', salary: 1250, },
-    
-    // { year: 2024, salary: 1250, },
   ],
 });
 salaries.push({
