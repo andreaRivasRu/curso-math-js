@@ -52,36 +52,72 @@ function salaryProjection(personName) {
 }
 
 // Analisis empresarial
-/* {
-    Industrias Mokepon: {
-        2018: [salario, salario, salario],
-        2019: [salario, salario, salario],
-        2020: [salario, salario, salario],
-    },
-    Freelance: {
-        2018: [salario, salario, salario],
-        2019: [salario, salario, salario],
-        2020: [salario, salario, salario],
-    },
-    MarketerosCOL: {
-        2018: [salario, salario, salario],
-        2019: [salario, salario, salario],
-        2020: [salario, salario, salario],
-    },
-} */
-const companies = {};
-for (person of salaries) {
-    for (job of person.jobs) {
-        if (!companies[job.company]) {
-            companies[job.company] = {};
-        }
 
-        if (!companies[job.company][job.year]) {
-            companies[job.company][job.year] = [];
-        }
+// const companies = {};
+// for (person of salaries) {
+//     for (job of person.jobs) {
+//         if (!companies[job.company]) {
+//             companies[job.company] = {};
+//         }
 
-        companies[job.company][job.year].push(job.salary);
+//         if (!companies[job.company][job.year]) {
+//             companies[job.company][job.year] = [];
+//         }
+
+//         companies[job.company][job.year].push(job.salary);
+//     }
+// }
+
+// console.log(companies);
+
+const companies = salaries.flatMap(person => person.jobs).reduce((object, job) => {
+    if(!object[job.company]) {
+        object[job.company] = {};
+    }
+
+    if(!object[job.company][job.year]) {
+        object[job.company][job.year] = [];
+    }
+
+    object[job.company][job.year].push(job.salary)
+
+    return object
+}, {});
+
+console.log(companies);
+
+function medianPerCompanyYear(name, year) {
+    if (!companies[name]) {
+        console.warn(`The company doesn't exist`);
+    } else if (!companies[name][year]) {
+        console.warn(`The company doesn't gave any salary that year`);
+    } else {
+        return PlatziMath.calcMediana(companies[name][year]);
     }
 }
 
-console.log(companies);
+function salaryProjectionPerCompany(name) {
+    if (!companies[name]) {
+        console.warn(`The company doesn't exist`);
+    } else {
+        const companyYears = Object.keys(companies[name]);
+        const listMedianYears = companyYears.map((year) => {
+            return medianPerCompanyYear(name, year);
+        });
+
+        let incrementsPorcent = [];
+
+        for (let i = 1; i < listMedianYears.length; i++) {
+            const actualYearMedianSalary = listMedianYears[i];
+            const lastYearMedianSalary = listMedianYears[i - 1];
+            const incrementPorcent = (actualYearMedianSalary - lastYearMedianSalary) / lastYearMedianSalary;
+            incrementsPorcent.push(parseFloat(incrementPorcent.toFixed(2)));
+        }
+
+        const medianIncrementPorcent = PlatziMath.calcMediana(incrementsPorcent);
+
+        const currentMedianSalary = listMedianYears.at(-1);
+        const newMedian = currentMedianSalary * medianIncrementPorcent + currentMedianSalary;
+        return Math.round(newMedian);
+    }
+}
